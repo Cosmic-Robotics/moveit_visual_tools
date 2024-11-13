@@ -2,6 +2,7 @@
 
 import moveit_visual_tools as mvt
 import rviz_visual_tools as rvt
+import rclcpp
 import sys
 import time
 from rclpy import logging
@@ -13,12 +14,11 @@ logger = logging.get_logger("moveit_visual_tools_demo")
 
 from geometry_msgs.msg import Pose, Point, Quaternion
 
-rvt.init()
+rclcpp.init()
 
 PLANNING_GROUP_NAME = "arm"
 
-node = rvt.RvizVisualToolsNode("moveit_visual_tools_demo")
-node.start_spin_thread()
+node = rclcpp.Node("moveit_visual_tools_demo")
 visual_tools = mvt.MoveItVisualTools(node, "world", "/moveit_visual_tools")
 visual_tools.load_planning_scene_monitor()
 visual_tools.load_marker_publisher(True)
@@ -129,3 +129,5 @@ for i in np.linspace(0.0, 1.0, 10):
     cylinder_pose.position.x += 0.1 + i
     visual_tools.trigger_planning_scene_update()
 time.sleep(1.0)
+
+rclcpp.shutdown()

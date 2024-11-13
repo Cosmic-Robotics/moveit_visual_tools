@@ -3,7 +3,7 @@
 #include <pybind11/stl.h>
 #include <rviz_visual_tools/rviz_visual_tools.hpp>
 #include <moveit_visual_tools/moveit_visual_tools.h>
-#include <rviz_visual_tools/binding_utils.hpp>
+#include <py_binding_tools/ros_msg_typecasters.h>
 
 namespace py = pybind11;
 using py::literals::operator""_a;
@@ -18,9 +18,8 @@ PYBIND11_MODULE(pymoveit_visual_tools, m)
   py::module::import("moveit.core.planning_scene");
 
   py::class_<MoveItVisualTools, rviz_visual_tools::RvizVisualTools>(m, "MoveItVisualTools")
-      .def(py::init(
-          [](const rviz_visual_tools::RvizVisualToolsNode::SharedPtr& node) { return MoveItVisualTools(node); }))
-      .def(py::init([](const rviz_visual_tools::RvizVisualToolsNode::SharedPtr& node, const std::string& base_frame,
+      .def(py::init([](const rclcpp::Node::SharedPtr& node) { return MoveItVisualTools(node); }))
+      .def(py::init([](const rclcpp::Node::SharedPtr& node, const std::string& base_frame,
                        const std::string& marker_topic) { return MoveItVisualTools(node, base_frame, marker_topic); }),
            "node"_a, "base_frame"_a, "marker_topic"_a = rviz_visual_tools::RVIZ_MARKER_TOPIC)
       .def("set_robot_state_topic", &MoveItVisualTools::setRobotStateTopic)
